@@ -36,8 +36,8 @@ namespace Messenger_Project
         }
         private void ForgotPassword_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("Ця функція поки в розробці. Спробуйте згадати пароль :)",
-                            "Інфо",
+            MessageBox.Show("This function is still under development.\nTry to guess the password :)",
+                            "Info",
                             MessageBoxButton.OK,
                             MessageBoxImage.Information);
         }
