@@ -38,23 +38,24 @@
                     Width="250" 
                     Margin="0,0,0,15"
                     FontSize="16"
-                    Click="Button_Click"/>
+                    Click="Login_Button_Click"/>
 
             <Button Content="Register" 
                     Height="50" 
                     Width="250" 
                     FontSize="16"
-                    Click="Button_Click_1"/>
+                    Click="Register_Button_Click"/>
             <!-- Cursor="Hand" Для відображення курсору при наведенні на текст-->
             <TextBlock Text="Forgot password?" 
                        Foreground="Gray" 
                        Margin="0,20,0,0" 
                        HorizontalAlignment="Center" 
-                       Cursor="Hand" />
+                       Cursor="Hand" 
+                       MouseDown="ForgotPassword_MouseDown"/>
             
 
         </StackPanel>
-
+        <!-- Для футтеру -->
         <TextBlock Grid.Row="2" 
                    HorizontalAlignment="Center" 
                    Foreground="LightGray"/>

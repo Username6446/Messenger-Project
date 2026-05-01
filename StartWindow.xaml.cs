@@ -14,14 +14,32 @@ using System.Windows.Shapes;
 
 namespace Messenger_Project
 {
-    /// <summary>
-    /// Interaction logic for StartWindow.xaml
-    /// </summary>
     public partial class StartWindow : Window
     {
         public StartWindow()
         {
             InitializeComponent();
+        }
+
+        private void Login_Button_Click(object sender, RoutedEventArgs e)
+        {
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
+            this.Close();
+        }
+
+        private void Register_Button_Click(object sender, RoutedEventArgs e)
+        {
+            RegisterWindow registerWindow = new RegisterWindow();
+            registerWindow.Show();
+            this.Close();
+        }
+        private void ForgotPassword_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBox.Show("Ця функція поки в розробці. Спробуйте згадати пароль :)",
+                            "Інфо",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
         }
     }
 }
