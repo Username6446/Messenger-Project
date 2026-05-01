@@ -5,8 +5,58 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Messenger_Project"
         mc:Ignorable="d"
-        Title="StartWindow" Height="450" Width="800">
+        Title="StartWindow" Height="650" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0" 
+           Source="/Resources/Logo.png" 
+           Width="120" 
+           Height="120" 
+           Margin="20"
+           HorizontalAlignment="Center"
+           Stretch="Uniform"/>
+        <StackPanel Grid.Row="1" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center">
+
+            <TextBlock Text="Welcome to Messenger" 
+                       FontSize="24" 
+                       FontWeight="SemiBold" 
+                       Margin="0,0,0,40" 
+                       HorizontalAlignment="Center"/>
+
+            <Button Content="Login" 
+                    Height="50" 
+                    Width="250" 
+                    Margin="0,0,0,15"
+                    FontSize="16"
+                    Click="Button_Click"/>
+
+            <Button Content="Register" 
+                    Height="50" 
+                    Width="250" 
+                    FontSize="16"
+                    Click="Button_Click_1"/>
+            <!-- Cursor="Hand" Для відображення курсору при наведенні на текст-->
+            <TextBlock Text="Forgot password?" 
+                       Foreground="Gray" 
+                       Margin="0,20,0,0" 
+                       HorizontalAlignment="Center" 
+                       Cursor="Hand" />
+            
+
+        </StackPanel>
+
+        <TextBlock Grid.Row="2" 
+                   HorizontalAlignment="Center" 
+                   Foreground="LightGray"/>
     </Grid>
 </Window>
