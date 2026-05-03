@@ -15,14 +15,11 @@ namespace Messenger_Project
         {
             DisplayUsername.Text = user.Username;
             UsernameText.Text = user.Username;
-
-            // ЗАГЛУШКА
             BirthDateText.Text = string.IsNullOrEmpty(user.BirthDate) ? "Not specified" : user.BirthDate;
             BioText.Text = string.IsNullOrEmpty(user.Bio) ? "No bio yet" : user.Bio;
-            MemberSinceText.Text = user.MemberSince.ToString("MMMM dd, yyyy");
+            MemberSinceText.Text = user.MemberSince.ToString("MMMM dd, yyyy", System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        // Перехід на сторінку редагування профілю
         private void EditProfile_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Edit profile — coming soon.", "Info",
