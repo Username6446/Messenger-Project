@@ -5,8 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Messenger_Project"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Login" Height="381" Width="391"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+
+    <StackPanel Margin="20" VerticalAlignment="Center">
+
+        <TextBlock Text="Username" Height="17"/>
+        <TextBox x:Name="UsernameBox" Height="33" RenderTransformOrigin="0.5,0.5">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleX="0.234"/>
+                    <RotateTransform/>
+                    <TranslateTransform X="-0.004"/>
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
+
+        <TextBlock Text="Password" Height="18"/>
+        <PasswordBox x:Name="PasswordBox" Margin="0,4,0,10" Height="33"/>
+
+        <TextBlock x:Name="ErrorText" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,10"/>
+
+        <Button Content="Sign in" Click="Sign_In_Button_Click" Height="23" Width="140" RenderTransformOrigin="0.571,0.534"/>
+
+
+
+
+
+
+    </StackPanel> 
 </Window>
