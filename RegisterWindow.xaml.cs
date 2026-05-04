@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -19,10 +20,8 @@ namespace Messenger_Project
             string repeatPassword = RepeatPasswordBox.Password;
 
             // проста валідація, коли перенесем це все в бд треба буде переробити
-
             if (!ValidateInputs(username, password, repeatPassword))
                 return;
-
 
             // ЗАГЛУШКА
             if (UserDatabase.UserExists(username))
@@ -31,11 +30,12 @@ namespace Messenger_Project
                 return;
             }
 
-
             // ЗАГЛУШКА
             UserDatabase.AddUser(username, password);
 
-            MainWindow mainWindow = new MainWindow();
+            UserRecord user = UserDatabase.FindUser(username, password)!;
+
+            MainWindow mainWindow = new MainWindow(user);
             mainWindow.Show();
             this.Close();
         }
@@ -58,7 +58,7 @@ namespace Messenger_Project
 
             if (string.IsNullOrEmpty(password))
             {
-                ShowError("enter the password.");
+                ShowError("Enter the password.");
                 PasswordBox.Focus();
                 return false;
             }
@@ -100,10 +100,6 @@ namespace Messenger_Project
         }
     }
 
-
-
-
-
     // ЗАГЛУШКА -------- для того хто буде робить логін можете просто скопіювати цю умовну бд для тесту
     public static class UserDatabase
     {
@@ -120,7 +116,8 @@ namespace Messenger_Project
             _users.Add(new UserRecord
             {
                 Username = username,
-                Password = password
+                Password = password,
+                MemberSince = DateTime.Now
             });
         }
 
@@ -130,13 +127,6 @@ namespace Messenger_Project
                 u.Username.Equals(username, System.StringComparison.OrdinalIgnoreCase) &&
                 u.Password == password);
         }
-    }
-
-
-    public class UserRecord
-    {
-        public string Username { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
     }
     // ЗАГЛУШКА -------- для того хто буде робить логін можете просто скопіювати цю умовну бд для тесту
 }

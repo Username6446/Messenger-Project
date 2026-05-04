@@ -1,0 +1,46 @@
+<Window x:Class="Messenger_Project.ProfileWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Profile" Height="500" Width="400"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+
+    <StackPanel Margin="20">
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+            <!-- STUB avatar -->
+            <Border Width="80" Height="80" Background="LightGray" CornerRadius="40">
+                <TextBlock Text="?" FontSize="32"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+
+            <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                <TextBlock x:Name="DisplayUsername" FontSize="18" FontWeight="Bold"/>
+                <Button Content="Edit profile"
+                        Width="100" Height="26" Margin="0,8,0,0"
+                        HorizontalAlignment="Left"
+                        Click="EditProfile_Click"/>
+            </StackPanel>
+        </StackPanel>
+
+        <TextBlock Text="Username" FontWeight="Bold"/>
+        <TextBlock x:Name="UsernameText" Margin="0,2,0,12"/>
+
+        <TextBlock Text="Date of birth" FontWeight="Bold"/>
+        <TextBlock x:Name="BirthDateText" Margin="0,2,0,12"/>
+
+        <TextBlock Text="Bio" FontWeight="Bold"/>
+        <TextBlock x:Name="BioText" Margin="0,2,0,12" TextWrapping="Wrap"/>
+
+        <TextBlock Text="Member since" FontWeight="Bold"/>
+        <TextBlock x:Name="MemberSinceText" Margin="0,2,0,12"/>
+
+        <Button Content="Back" Width="100" HorizontalAlignment="Left"
+                Margin="0,10,0,0" Click="Back_Click"/>
+
+    </StackPanel>
+</Window>
