@@ -1,22 +1,73 @@
 <Window x:Class="Messenger_Project.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Title="Messenger" Height="450" Width="800"
+        Title="Messenger" Height="600" Width="1000"
         WindowStartupLocation="CenterScreen">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <!--LEFT PANEL-->
+        <Grid Grid.Column="0" Background="#F0F0F0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <!--Header with profile-->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Background="#E0E0E0">
+                <Button Width="40" Height="40" Margin="10,10,0,10"
+                        Background="Transparent" BorderThickness="0"
+                        Cursor="Hand" Click="OpenProfile_Click">
+                    <Image Source="/Resources/Profile.png" Stretch="Uniform"/>
+                </Button>
+                <TextBlock Text="Chats" FontSize="18" FontWeight="Bold" 
+                           VerticalAlignment="Center" Margin="15,0,0,0"/>
+            </StackPanel>
+            <!--Chat list-->
+            <ListBox x:Name="ChatsListBox" Grid.Row="1" Background="Transparent" 
+                     BorderThickness="0" SelectionChanged="ChatsListBox_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" FontSize="16" Margin="10"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        <!--RIGHT PANEL-->
+        <Grid Grid.Column="1" Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="70" />
+            </Grid.RowDefinitions>
 
-        <Button Width="36" Height="36"
-                HorizontalAlignment="Left" VerticalAlignment="Top"
-                Margin="10,10,0,0"
-                Background="Transparent"
-                BorderThickness="0"
-                Cursor="Hand"
-                Click="OpenProfile_Click">
-            <Image Source="/Resources/Profile.png" Stretch="Uniform"/>
-        </Button>
-
+            <Border Grid.Row="0" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+                <TextBlock x:Name="ActiveChatNameText" Text="Select a chat to start messaging" 
+                           FontSize="18" FontWeight="Medium" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            </Border>
+            <!--Message list-->
+            <ListBox x:Name="MessagesListBox" Grid.Row="1" BorderThickness="0" 
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="#E3F2FD" CornerRadius="8" Margin="10,5" Padding="12,8" MaxWidth="400" HorizontalAlignment="Left">
+                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap" FontSize="14"/>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <!--input panel-->
+            <Grid Grid.Row="2" Background="#F9F9F9">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="MessageInput" Grid.Column="0" Margin="15,15,5,15" 
+                         VerticalContentAlignment="Center" FontSize="14"/>
+                <Button Grid.Column="1" Content="Send" Margin="5,15,15,15" 
+                        Click="SendMessage_Click" Cursor="Hand"/>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
