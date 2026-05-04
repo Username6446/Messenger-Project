@@ -23,8 +23,17 @@ namespace Messenger_Project
 
         private void Login_Button_Click(object sender, RoutedEventArgs e)
         {
-            LoginWindow loginWindow = new LoginWindow();
-            loginWindow.Show();
+            // Для 
+            //LoginWindow loginWindow = new LoginWindow();
+            //loginWindow.Show();
+            //this.Close();
+            
+            UserDatabase.AddUser("qwerty", "qwerty123");
+
+            UserRecord user = UserDatabase.FindUser("qwerty", "qwerty123")!;
+
+            MainWindow mainWindow = new MainWindow(user);
+            mainWindow.Show();
             this.Close();
         }
 
