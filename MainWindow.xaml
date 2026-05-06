@@ -8,6 +8,20 @@
             <ColumnDefinition Width="300" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <!--SIDE PANEL-->
+        <Grid x:Name="SideBar" Grid.Column="0" Panel.ZIndex="1" Background="#333333" Visibility="Collapsed">
+            <StackPanel Margin="20">
+                <Button Content="X" Width="30" HorizontalAlignment="Right" Click="CloseSideBar_Click"/>
+                
+                <Button Content="Profile" Margin="0,20,0,10" Foreground="White" Click="Profile_Click" Height="50"/>
+                <Button Content="New Group" Margin="0,0,0,10" Foreground="White" Click="NewGroup_Click" Height="50"/>
+                <Button Content="Contacts" Margin="0,0,0,10" Foreground="White" Click="Contacts_Click" Height="50"/>
+                <Button Content="Saved Messages" Margin="0,0,0,10" Foreground="White" Click="SavedMessages_Click" Height="50"/>
+                <Button Content="Settings" Margin="0,0,0,10" Foreground="White" Click="Settings_Click" Height="50"/>
+                
+                <Button Content="Back to Chats" Margin="0,0,0,0" Foreground="Red" Click="BackToChats_Click" />
+            </StackPanel>
+        </Grid>
         <!--LEFT PANEL-->
         <Grid Grid.Column="0" Background="#F0F0F0">
             <Grid.RowDefinitions>
@@ -18,7 +32,7 @@
             <StackPanel Grid.Row="0" Orientation="Horizontal" Background="#E0E0E0">
                 <Button Width="40" Height="40" Margin="10,10,0,10"
                         Background="Transparent" BorderThickness="0"
-                        Cursor="Hand" Click="OpenProfile_Click">
+                        Cursor="Hand" Click="OpenSideBar_Click">
                     <Image Source="/Resources/Profile.png" Stretch="Uniform"/>
                 </Button>
                 <TextBlock Text="Chats" FontSize="18" FontWeight="Bold" 
@@ -35,7 +49,7 @@
             </ListBox>
         </Grid>
         <!--RIGHT PANEL-->
-        <Grid Grid.Column="1" Background="White">
+        <Grid Grid.Column="1" Background="White" x:Name="ChatView">
             <Grid.RowDefinitions>
                 <RowDefinition Height="60" />
                 <RowDefinition Height="*" />
@@ -69,5 +83,6 @@
                         Click="SendMessage_Click" Cursor="Hand"/>
             </Grid>
         </Grid>
+        <ContentControl x:Name="MainArea" Grid.Column="1" Panel.ZIndex="2"/>
     </Grid>
 </Window>
