@@ -22,15 +22,8 @@ namespace Messenger_Project
 
         private void EditProfile_Click(object sender, RoutedEventArgs e)
         {
-            EditProfileWindow window = new EditProfileWindow();
-
-            if (window.ShowDialog() == true)
-            {
-                UsernameText.Text = window.UpdatedUsername;
-                DisplayUsername.Text = window.UpdatedUsername;
-                BirthDateText.Text = window.UpdatedBirthDate.Value.ToShortDateString();
-                BioText.Text = window.UpdatedBio;
-            }
+            MessageBox.Show("Edit profile — coming soon.", "Info",
+                MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
