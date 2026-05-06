@@ -73,7 +73,9 @@ namespace Messenger_Project
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Settings page coming soon!");
+            ChatView.Visibility = Visibility.Collapsed;
+            MainArea.Content = new SettingsControl();
+            SideBar.Visibility = Visibility.Collapsed;
         }
 
         private void Profile_Click(object sender, RoutedEventArgs e)
@@ -82,7 +84,9 @@ namespace Messenger_Project
         }
         private void Contacts_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Contacts page coming soon!");
+            ChatView.Visibility = Visibility.Collapsed;
+            MainArea.Content = new ContactsControl();
+            SideBar.Visibility = Visibility.Collapsed;
         }
         private void SavedMessages_Click(object sender, RoutedEventArgs e)
         {
