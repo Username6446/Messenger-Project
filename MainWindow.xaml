@@ -33,7 +33,7 @@
                 <Button Width="40" Height="40" Margin="10,10,0,10"
                         Background="Transparent" BorderThickness="0"
                         Cursor="Hand" Click="OpenSideBar_Click">
-                    <Image Source="/Resources/Profile.png" Stretch="Uniform"/>
+                    <Image Source="/Resources/SideBar.png" Stretch="Uniform"/>
                 </Button>
                 <TextBlock Text="Chats" FontSize="18" FontWeight="Bold" 
                            VerticalAlignment="Center" Margin="15,0,0,0"/>
