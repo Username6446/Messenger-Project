@@ -37,11 +37,6 @@ namespace Messenger_Project
             ChatsListBox.ItemsSource = _chats;
         }
 
-        private void OpenProfile_Click(object sender, RoutedEventArgs e)
-        {
-            ProfileWindow profileWindow = new ProfileWindow(_currentUser);
-            profileWindow.Show();
-        }
 
         private void ChatsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -65,7 +60,56 @@ namespace Messenger_Project
                 MessageInput.Clear();
             }
         }
+
+        private void OpenSideBar_Click(object sender, RoutedEventArgs e)
+        {
+            SideBar.Visibility = Visibility.Visible;
+        }
+
+        private void CloseSideBar_Click(object sender, RoutedEventArgs e)
+        {
+            SideBar.Visibility = Visibility.Collapsed;
+        }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            ChatView.Visibility = Visibility.Collapsed;
+            MainArea.Content = new SettingsControl();
+            SideBar.Visibility = Visibility.Collapsed;
+        }
+
+        private void Profile_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Profile page coming soon!");
+        }
+        private void Contacts_Click(object sender, RoutedEventArgs e)
+        {
+            ChatView.Visibility = Visibility.Collapsed;
+            MainArea.Content = new ContactsControl();
+            SideBar.Visibility = Visibility.Collapsed;
+        }
+        private void SavedMessages_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("SavedMessages page coming soon!");
+        }
+
+        private void NewGroup_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("New Group page coming soon!");
+        }
+
+        private void BackToChats_Click(object sender, RoutedEventArgs e)
+        {
+            // Очищаємо зону сторінок і повертаємо видимість чату
+            MainArea.Content = null;
+            ChatView.Visibility = Visibility.Visible;
+
+            SideBar.Visibility = Visibility.Collapsed;
+        }
+
     }
+
+
 
     // Тимчасові структури даних
     public class DummyChat
