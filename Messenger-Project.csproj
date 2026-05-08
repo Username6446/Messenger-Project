@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\Logo.png" />
 	<Resource Include="Resources\Profile.png" />
 	<Resource Include="Resources\SideBar.png" />

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-
+using BCrypt.Net;
 namespace Messenger_Project
 {
     public partial class RegisterWindow : Window
@@ -38,6 +38,43 @@ namespace Messenger_Project
             MainWindow mainWindow = new MainWindow(user);
             mainWindow.Show();
             this.Close();
+
+
+            //try
+            //{
+            //    using (var db = new MessengerDbContext())
+            //    {
+            //// перевірка чи є таке ім я у базі 
+            //        bool userExists = db.Users.Any(u => u.Username.ToLower() == username.ToLower());
+
+            //        if (userExists)
+            //        {
+            //            ShowError("This username is already busy. Choose another.");
+            //            return;
+            //        }
+            ////      Хешуваня паролю
+            //        string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
+            // // Клас користувача у базі
+            //        var newUser = new User
+            //        {
+            //            Username = username,
+            //            PasswordHash = passwordHash,
+            //            MemberSince = DateTime.Now
+            //        };
+
+            //        db.Users.Add(newUser);
+            //        db.SaveChanges();
+
+            //        MainWindow mainWindow = new MainWindow(newUser);
+            //        mainWindow.Show();
+            //        this.Close();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    ShowError($"Database connection failed: {ex.Message}");
+            //}
+
         }
 
         private bool ValidateInputs(string username, string password, string repeatPassword)
