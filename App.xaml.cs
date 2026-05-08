@@ -27,7 +27,6 @@ namespace Messenger_Project
                 var factory = new AppDbContextFactory();
                 using (var context = factory.CreateDbContext(Array.Empty<string>()))
                 {
-                    // Ensure the database is created and migrations are applied
                     context.Database.Migrate();
                     MessageBox.Show("Database initialized successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
