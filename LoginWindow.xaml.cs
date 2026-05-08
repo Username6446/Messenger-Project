@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
-
+using BCrypt.Net;
 
 namespace Messenger_Project
 {
@@ -10,8 +10,6 @@ namespace Messenger_Project
         public LoginWindow()
         {
             InitializeComponent();
-
-            
         }
         private void ShowError(string message)
         {
@@ -59,6 +57,31 @@ namespace Messenger_Project
             MainWindow mainWindow = new MainWindow(user);
             mainWindow.Show();
             this.Close();
+
+            //try
+            //{
+            //    using (var db = new MessengerDbContext())
+            //    {
+            //        // Шукаємо користувача за його логіном 
+            //        var user = db.Users.FirstOrDefault(u => u.Username.ToLower() == username.ToLower());
+
+            //        // Якщо користувача немає або пароль не підходить
+            //        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            //        {
+            //            ShowError("Invalid username or password");
+            //            return;
+            //        }
+
+            //        MainWindow mainWindow = new MainWindow(user);
+            //        mainWindow.Show();
+            //        this.Close();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    ShowError($"Database connection failed: {ex.Message}");
+            //}
+
         }
 
         public static class UserDatabase
