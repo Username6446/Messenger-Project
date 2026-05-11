@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-
+using Messenger_Project.Models;
 namespace Messenger_Project
 {
     public partial class MainWindow : Window
     {
-        private UserRecord _currentUser;
+        private User _currentUser;
         
         // Тимчасові дані для відображення
         private List<DummyChat> _chats;
 
-        public MainWindow(UserRecord user)
+        public MainWindow(User user)
         {
             InitializeComponent();
             _currentUser = user;

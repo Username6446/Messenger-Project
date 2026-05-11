@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Messenger_Project.Models;
 
 namespace Messenger_Project
 {
@@ -20,22 +21,28 @@ namespace Messenger_Project
     /// </summary>
     public partial class ProfileControl : UserControl
     {
-        private UserRecord _currentUser;
+        private User _currentUser;
         public ProfileControl()
         {
             InitializeComponent();
         }
-        public ProfileControl(UserRecord user)
+        public ProfileControl(User user)
         {
             InitializeComponent();
             _currentUser = user;
             LoadProfile(user);
         }
-        private void LoadProfile(UserRecord user)
+        private void LoadProfile(User user)
         {
             DisplayUsername.Text = user.Username;
             UsernameText.Text = user.Username;
-            MemberSinceText.Text = user.MemberSince.ToString("MMMM dd, yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            BioText.Text = string.IsNullOrEmpty(user.Bio) ? "No bio yet" : user.Bio;
+
+            if (user.BirthDate.HasValue)
+                BirthDateText.Text = user.BirthDate.Value.ToShortDateString();
+            else
+                BirthDateText.Text = "Not specified";
+            MemberSinceText.Text = user.CreatedAt.ToString("MMMM dd, yyyy", System.Globalization.CultureInfo.InvariantCulture);
         }
 
         private void EditProfile_Click(object sender, RoutedEventArgs e)

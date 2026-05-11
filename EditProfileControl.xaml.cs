@@ -12,7 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using Messenger_Project.Models;
+using Messenger_Project.Data;
 namespace Messenger_Project
 {
     /// <summary>
@@ -20,17 +21,16 @@ namespace Messenger_Project
     /// </summary>
     public partial class EditProfileControl : UserControl
     {
-        private UserRecord _currentUser;
+        private User _currentUser;
 
-        public EditProfileControl(UserRecord user)
+        public EditProfileControl(User user)
         {
             InitializeComponent();
             _currentUser = user;
 
-            // Завантажуємо поточні дані в поля вводу
             UsernameBox.Text = _currentUser.Username;
-            // BirthDatePicker.SelectedDate = ... ; // Якщо є таке поле в базі
-            // BioBox.Text = _currentUser.Bio; // Якщо є таке поле в базі
+            BioBox.Text = _currentUser.Bio;
+            BirthDatePicker.SelectedDate = _currentUser.BirthDate;
         }
         public EditProfileControl()
         {
@@ -53,14 +53,14 @@ namespace Messenger_Project
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
             _currentUser.Username = UsernameBox.Text;
-            // _currentUser.Bio = BioBox.Text; 
+            _currentUser.Bio = BioBox.Text;
+            _currentUser.BirthDate = BirthDatePicker.SelectedDate;
 
-            // База данних
-            //using (var db = new MessengerDbContext())
-            //{
-            //    db.Users.Update(_currentUser);
-            //    db.SaveChanges();
-            //}
+            using (var db = new AppDbContext())
+            {
+                db.Users.Update(_currentUser);
+                db.SaveChanges();
+            }
 
             if (Window.GetWindow(this) is MainWindow mainWindow)
             {

@@ -2,7 +2,8 @@
 using System.Windows.Controls;
 using System.Collections.Generic;
 using BCrypt.Net;
-
+using Messenger_Project.Data;  
+using Messenger_Project.Models; 
 namespace Messenger_Project
 {
     public partial class LoginWindow : Window
@@ -45,43 +46,39 @@ namespace Messenger_Project
             }
 
             // перевірка на існуючий акаунт
-            var user = UserDatabase.FindUser(username, password);
+            //var user = UserDatabase.FindUser(username, password);
+            //if (user == null)
+            //{
+            //    ShowError("Invalid username or password");
+            //    return;
+            //}
+            //MainWindow mainWindow = new MainWindow(user);
+            //mainWindow.Show();
+            //this.Close();
 
-            if (user == null)
+            try
             {
-                ShowError("Invalid username or password");
-                return;
+                using (var db = new AppDbContext())
+                {
+                    // Тепер 'user' оголошується ТІЛЬКИ ТУТ
+                    var user = db.Users.FirstOrDefault(u => u.Username.ToLower() == username.ToLower());
+
+                    if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+                    {
+                        ShowError("Invalid username or password");
+                        return;
+                    }
+
+                    // Якщо все добре — переходимо в головне вікно
+                    MainWindow mainWindow = new MainWindow(user);
+                    mainWindow.Show();
+                    this.Close();
+                }
             }
-
-
-            MainWindow mainWindow = new MainWindow(user);
-            mainWindow.Show();
-            this.Close();
-
-            //try
-            //{
-            //    using (var db = new MessengerDbContext())
-            //    {
-            //        // Шукаємо користувача за його логіном 
-            //        var user = db.Users.FirstOrDefault(u => u.Username.ToLower() == username.ToLower());
-
-            //        // Якщо користувача немає або пароль не підходить
-            //        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-            //        {
-            //            ShowError("Invalid username or password");
-            //            return;
-            //        }
-
-            //        MainWindow mainWindow = new MainWindow(user);
-            //        mainWindow.Show();
-            //        this.Close();
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    ShowError($"Database connection failed: {ex.Message}");
-            //}
-
+            catch (Exception ex)
+            {
+                ShowError($"Database connection failed: {ex.Message}");
+            }
         }
 
         public static class UserDatabase

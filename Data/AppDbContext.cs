@@ -14,6 +14,10 @@ public class AppDbContext : DbContext
     public DbSet<Message> Messages { get; set; }
     public DbSet<Contact> Contacts { get; set; }
 
+    // Порожній конструктор (щоб писати new AppDbContext() у коді)
+    public AppDbContext()
+    {
+    }
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
