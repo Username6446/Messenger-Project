@@ -75,12 +75,15 @@ namespace Messenger_Project
         {
             ChatView.Visibility = Visibility.Collapsed;
             MainArea.Content = new SettingsControl();
-            SideBar.Visibility = Visibility.Collapsed;
+            //SideBar.Visibility = Visibility.Collapsed;
         }
 
         private void Profile_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Profile page coming soon!");
+            ChatView.Visibility= Visibility.Collapsed;
+            MainArea.Content = new ProfileControl(_currentUser);
+            //SideBar.Visibility = Visibility.Collapsed;
+
         }
         private void Contacts_Click(object sender, RoutedEventArgs e)
         {
