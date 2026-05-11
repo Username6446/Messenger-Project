@@ -95,7 +95,9 @@ namespace Messenger_Project
         }
         private void SavedMessages_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("SavedMessages page coming soon!");
+            ChatView.Visibility = Visibility.Collapsed;
+            SideBar.Visibility = Visibility.Collapsed;
+            MainArea.Content = new SavedMessagesControl(_currentUser);
         }
 
         private void NewGroup_Click(object sender, RoutedEventArgs e)
