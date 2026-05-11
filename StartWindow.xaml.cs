@@ -25,40 +25,40 @@ namespace Messenger_Project
         private void Login_Button_Click(object sender, RoutedEventArgs e)
         {
             // Для нормального входу
-            LoginWindow loginWindow = new LoginWindow();
-            loginWindow.Show();
-            this.Close();
+            //LoginWindow loginWindow = new LoginWindow();
+            //loginWindow.Show();
+            //this.Close();
 
             // Швидкий вхід 
-            //try
-            //{
-            //    using (var db = new AppDbContext())
-            //    {
-            //        string testUsername = "qwerty";
-            //        string testPassword = "qwerty123";
+            try
+            {
+                using (var db = new AppDbContext())
+                {
+                    string testUsername = "qwerty";
+                    string testPassword = "qwerty123";
 
-            //        var user = db.Users.FirstOrDefault(u => u.Username == testUsername);
+                    var user = db.Users.FirstOrDefault(u => u.Username == testUsername);
 
-            //        if (user == null)
-            //        {
-            //            user = new User
-            //            {
-            //                Username = testUsername,
-            //                PasswordHash = BCrypt.Net.BCrypt.HashPassword(testPassword),
-            //                CreatedAt = DateTime.UtcNow
-            //            };
-            //            db.Users.Add(user);
-            //            db.SaveChanges();
-            //        }
-            //        MainWindow mainWindow = new MainWindow(user);
-            //        mainWindow.Show();
-            //        this.Close();
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Database connection failed: {ex.Message}");
-            //}
+                    if (user == null)
+                    {
+                        user = new User
+                        {
+                            Username = testUsername,
+                            PasswordHash = BCrypt.Net.BCrypt.HashPassword(testPassword),
+                            CreatedAt = DateTime.UtcNow
+                        };
+                        db.Users.Add(user);
+                        db.SaveChanges();
+                    }
+                    MainWindow mainWindow = new MainWindow(user);
+                    mainWindow.Show();
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Database connection failed: {ex.Message}");
+            }
         }
 
         private void Register_Button_Click(object sender, RoutedEventArgs e)
