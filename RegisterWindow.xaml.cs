@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using BCrypt.Net;
+using Messenger_Project.Data;
+using Messenger_Project.Models;
+
 namespace Messenger_Project
 {
     public partial class RegisterWindow : Window
@@ -23,58 +26,43 @@ namespace Messenger_Project
             if (!ValidateInputs(username, password, repeatPassword))
                 return;
 
-            // ЗАГЛУШКА
-            if (UserDatabase.UserExists(username))
+            try
             {
-                ShowError("This username is already busy. Choose another.");
-                return;
+                using (var db = new AppDbContext())
+                {
+                    // Перевірка чи є таке ім'я у базі 
+                    bool userExists = db.Users.Any(u => u.Username.ToLower() == username.ToLower());
+
+                    if (userExists)
+                    {
+                        ShowError("This username is already busy. Choose another.");
+                        return;
+                    }
+
+                    // Хешування паролю
+                    string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
+
+                    //Створення нового користувача
+                    var newUser = new User
+                    {
+                        Username = username,
+                        PasswordHash = passwordHash,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    //Запис у базу
+                    db.Users.Add(newUser);
+                    db.SaveChanges();
+
+                    MainWindow mainWindow = new MainWindow(newUser);
+                    mainWindow.Show();
+                    this.Close();
+                }
             }
-
-            // ЗАГЛУШКА
-            UserDatabase.AddUser(username, password);
-
-            UserRecord user = UserDatabase.FindUser(username, password)!;
-
-            MainWindow mainWindow = new MainWindow(user);
-            mainWindow.Show();
-            this.Close();
-
-
-            //try
-            //{
-            //    using (var db = new MessengerDbContext())
-            //    {
-            //// перевірка чи є таке ім я у базі 
-            //        bool userExists = db.Users.Any(u => u.Username.ToLower() == username.ToLower());
-
-            //        if (userExists)
-            //        {
-            //            ShowError("This username is already busy. Choose another.");
-            //            return;
-            //        }
-            ////      Хешуваня паролю
-            //        string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
-            // // Клас користувача у базі
-            //        var newUser = new User
-            //        {
-            //            Username = username,
-            //            PasswordHash = passwordHash,
-            //            MemberSince = DateTime.Now
-            //        };
-
-            //        db.Users.Add(newUser);
-            //        db.SaveChanges();
-
-            //        MainWindow mainWindow = new MainWindow(newUser);
-            //        mainWindow.Show();
-            //        this.Close();
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    ShowError($"Database connection failed: {ex.Message}");
-            //}
-
+            catch (Exception ex)
+            {
+                ShowError($"Database connection failed: {ex.Message}");
+            }
         }
 
         private bool ValidateInputs(string username, string password, string repeatPassword)
@@ -136,34 +124,4 @@ namespace Messenger_Project
             ErrorText.Text = string.Empty;
         }
     }
-
-    // ЗАГЛУШКА -------- для того хто буде робить логін можете просто скопіювати цю умовну бд для тесту
-    public static class UserDatabase
-    {
-        private static List<UserRecord> _users = new List<UserRecord>();
-
-        public static bool UserExists(string username)
-        {
-            return _users.Exists(u =>
-                u.Username.Equals(username, System.StringComparison.OrdinalIgnoreCase));
-        }
-
-        public static void AddUser(string username, string password)
-        {
-            _users.Add(new UserRecord
-            {
-                Username = username,
-                Password = password,
-                MemberSince = DateTime.Now
-            });
-        }
-
-        public static UserRecord? FindUser(string username, string password)
-        {
-            return _users.Find(u =>
-                u.Username.Equals(username, System.StringComparison.OrdinalIgnoreCase) &&
-                u.Password == password);
-        }
-    }
-    // ЗАГЛУШКА -------- для того хто буде робить логін можете просто скопіювати цю умовну бд для тесту
 }
