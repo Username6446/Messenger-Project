@@ -81,7 +81,7 @@ namespace Messenger_Project
         private void Profile_Click(object sender, RoutedEventArgs e)
         {
             ChatView.Visibility= Visibility.Collapsed;
-            MainArea.Content = new EditProfileControl();
+            MainArea.Content = new ProfileControl(_currentUser);
             //SideBar.Visibility = Visibility.Collapsed;
 
         }

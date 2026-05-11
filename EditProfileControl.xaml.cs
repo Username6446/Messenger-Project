@@ -20,6 +20,18 @@ namespace Messenger_Project
     /// </summary>
     public partial class EditProfileControl : UserControl
     {
+        private UserRecord _currentUser;
+
+        public EditProfileControl(UserRecord user)
+        {
+            InitializeComponent();
+            _currentUser = user;
+
+            // Завантажуємо поточні дані в поля вводу
+            UsernameBox.Text = _currentUser.Username;
+            // BirthDatePicker.SelectedDate = ... ; // Якщо є таке поле в базі
+            // BioBox.Text = _currentUser.Bio; // Якщо є таке поле в базі
+        }
         public EditProfileControl()
         {
             InitializeComponent();
@@ -33,19 +45,33 @@ namespace Messenger_Project
 
         private void Cancel_Button_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (Window.GetWindow(this) is MainWindow mainWindow)
+            {
+                mainWindow.MainArea.Content = new ProfileControl(_currentUser);
+            }
         }
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
-            UpdatedUsername = UsernameBox.Text;
-            UpdatedBirthDate = BirthDatePicker.SelectedDate;
-            UpdatedBio = BioBox.Text;
-            
+            _currentUser.Username = UsernameBox.Text;
+            // _currentUser.Bio = BioBox.Text; 
+
+            // База данних
+            //using (var db = new MessengerDbContext())
+            //{
+            //    db.Users.Update(_currentUser);
+            //    db.SaveChanges();
+            //}
+
+            if (Window.GetWindow(this) is MainWindow mainWindow)
+            {
+                mainWindow.MainArea.Content = new ProfileControl(_currentUser);
+            }
+
         }
 
         private void Change_Avatar_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            // Логіка зміни аватарки
         }
     }
 }
