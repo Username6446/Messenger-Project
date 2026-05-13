@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="Messenger_Project.EditProfileControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="White">
+             Background="{DynamicResource MainBackground}">
     <StackPanel Margin="20">
 
         <StackPanel HorizontalAlignment="Center" Margin="0,0,0,20">

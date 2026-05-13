@@ -6,7 +6,8 @@
         mc:Ignorable="d"
         Title="Profile" Height="500" Width="400"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Background="{DynamicResource MainBackground}">
 
     <StackPanel Margin="20">
 

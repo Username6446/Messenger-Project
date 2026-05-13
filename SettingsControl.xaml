@@ -9,10 +9,10 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="30">
 
-            <TextBlock Text="Settings" FontSize="28" FontWeight="Bold" Foreground="#333333" Margin="0,0,0,30"/>
+            <TextBlock Text="Settings" FontSize="28" FontWeight="Bold"  Margin="0,0,0,30"/>
 
-            <TextBlock Text="Profile" FontSize="18" FontWeight="SemiBold" Foreground="#666666" Margin="0,0,0,10"/>
-            <Border Background="#F9F9F9" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <TextBlock Text="Profile" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+            <Border  CornerRadius="8" Padding="15" Margin="0,0,0,20">
                 <StackPanel>
 
                     <Grid Margin="0,0,0,15">
@@ -36,8 +36,8 @@
                 </StackPanel>
             </Border>
 
-            <TextBlock Text="Appearance" FontSize="18" FontWeight="SemiBold" Foreground="#666666" Margin="0,0,0,10"/>
-            <Border Background="#F9F9F9" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <TextBlock Text="Appearance" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+            <Border  CornerRadius="8" Padding="15" Margin="0,0,0,20">
                 <StackPanel>
 
                     <Grid Margin="0,0,0,15">
@@ -64,8 +64,8 @@
                 </StackPanel>
             </Border>
 
-            <TextBlock Text="Privacy &amp; Security" FontSize="18" FontWeight="SemiBold" Foreground="#666666" Margin="0,0,0,10"/>
-            <Border Background="#F9F9F9" CornerRadius="8" Padding="15" Margin="0,0,0,30">
+            <TextBlock Text="Privacy &amp; Security" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+            <Border CornerRadius="8" Padding="15" Margin="0,0,0,30">
                 <StackPanel>
                     <CheckBox Content="Show my phone number" IsChecked="False" FontSize="15" Margin="0,0,0,10"/>
                     <CheckBox Content="Allow anyone to invite me to groups" IsChecked="True" FontSize="15" Margin="0,0,0,10"/>
