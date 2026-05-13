@@ -4,6 +4,148 @@
              xmlns:local="clr-namespace:Messenger_Project"
              StartupUri="StartWindow.xaml">
     <Application.Resources>
-         
+
+
+        
+        <!-- backgrounds -->
+        <SolidColorBrush x:Key="MainBackground" Color="#17212B"/>
+        <SolidColorBrush x:Key="SidebarBackground" Color="#0E1621"/>
+        <SolidColorBrush x:Key="HeaderBackground" Color="#242F3D"/>
+
+        <!-- message -->
+        <SolidColorBrush x:Key="IncomingMessage" Color="#242F3D"/>
+        <SolidColorBrush x:Key="OutgoingMessage" Color="#2B5278"/>
+        <SolidColorBrush x:Key="SelectedMessage" Color="#324254"/>
+
+        <SolidColorBrush x:Key="PrimaryAccent" Color="#5288C1"/>
+        <SolidColorBrush x:Key="PurpleAccent" Color="#8E85EE"/>
+        <SolidColorBrush x:Key="OnlineStatus" Color="#47A1D5"/>
+        <SolidColorBrush x:Key="ErrorColor" Color="#EC3942"/>
+
+        <!-- text -->
+        <SolidColorBrush x:Key="PrimaryText" Color="#E1E1E1"/>
+        <SolidColorBrush x:Key="SecondaryText" Color="#708499"/>
+        <SolidColorBrush x:Key="OutgoingText" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="HyperlinkText" Color="#6AB3F3"/>
+
+
+        <!-- button-->
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryAccent}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#659EDB"/>
+                </Trigger>
+
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#40688F"/>
+                </Trigger>
+
+            </Style.Triggers>
+        </Style>
+
+        <!-- textbox-->
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#708499"/>
+            <Setter Property="Foreground" Value="#E1E1E1"/>
+            <Setter Property="BorderBrush" Value="#0E1621"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="FontSize" Value="14"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border CornerRadius="8"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer Margin="2"
+                                  x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <!-- listbox -->
+
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="{StaticResource SidebarBackground}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryText}"/>
+        </Style>
+
+
+        <!-- items -->
+
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+
+                        <Border x:Name="Bd"
+                                Background="Transparent"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+
+                            <ContentPresenter/>
+
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd"
+                                        Property="Background"
+                                        Value="#1E2A38"/>
+                            </Trigger>
+
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd"
+                                        Property="Background"
+                                        Value="{StaticResource SelectedMessage}"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <!-- textblock -->
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource PrimaryText}"/>
+        </Style>
+
     </Application.Resources>
 </Application>

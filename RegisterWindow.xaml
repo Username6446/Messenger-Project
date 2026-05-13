@@ -6,7 +6,8 @@
         mc:Ignorable="d"
         Title="Sign up" Height="381" Width="391"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Background="{DynamicResource MainBackground}">
 
     <StackPanel Margin="20" VerticalAlignment="Center">
 
