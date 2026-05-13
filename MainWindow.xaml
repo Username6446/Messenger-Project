@@ -27,6 +27,7 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="60" />
+                <RowDefinition Height="50" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <!--Header with profile-->
@@ -39,8 +40,13 @@
                 <TextBlock Text="Chats" FontSize="18" FontWeight="Bold" 
                            VerticalAlignment="Center" Margin="15,0,0,0"/>
             </StackPanel>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,5">
+                <TextBox x:Name="SearchBox" Width="210" VerticalContentAlignment="Center" FontSize="14" Padding="5,0"/>
+                <Button Content="Search" Width="60" Margin="5,0,0,0" Click="SearchButton_Click" Cursor="Hand"/>
+            </StackPanel>
             <!--Chat list-->
-            <ListBox x:Name="ChatsListBox" Grid.Row="1" 
+            <ListBox x:Name="ChatsListBox" Grid.Row="2" 
                      BorderThickness="0" SelectionChanged="ChatsListBox_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

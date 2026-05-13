@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using Messenger_Project.Models;
+using Messenger_Project.Data;
+using System.Linq;
 namespace Messenger_Project
 {
     public partial class MainWindow : Window
@@ -93,7 +95,9 @@ namespace Messenger_Project
         }
         private void SavedMessages_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("SavedMessages page coming soon!");
+            ChatView.Visibility = Visibility.Collapsed;
+            SideBar.Visibility = Visibility.Collapsed;
+            MainArea.Content = new SavedMessagesControl(_currentUser);
         }
 
         private void NewGroup_Click(object sender, RoutedEventArgs e)
@@ -109,7 +113,34 @@ namespace Messenger_Project
 
             SideBar.Visibility = Visibility.Collapsed;
         }
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            string searchText = SearchBox.Text.Trim();
 
+            // Якщо нічого не ввели — нічого не шукаємо
+            if (string.IsNullOrEmpty(searchText))
+                return;
+
+            try
+            {
+                using (var db = new AppDbContext())
+                {
+                    // Шукаємо в базі всіх юзерів, чий Username містить введений текст
+                    var foundUsers = db.Users
+                        .Where(u => u.Username.Contains(searchText))
+                        .ToList();
+
+                    ChatView.Visibility = Visibility.Collapsed;
+
+                    // Відкриваємо результати пошуку в MainArea і передаємо туди знайдених людей
+                    MainArea.Content = new SearchResultsControl(foundUsers);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Search error: {ex.Message}");
+            }
+        }
     }
 
 
