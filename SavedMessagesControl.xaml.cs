@@ -1,99 +1,145 @@
-﻿using Messenger_Project.Data;
-using Messenger_Project.Models;
-using System.Collections.Generic;
+﻿using Messenger_Project.Models;
+using Messenger_Project.Services;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+
 namespace Messenger_Project
 {
     public partial class SavedMessagesControl : UserControl
     {
-        private User _currentUser;
-        private int _savedChatId; // ID чату "збережених"
+        private readonly ServerService? _serverService;
+        private int _savedChatId;
+        private int _currentUserId;
 
-        public SavedMessagesControl(User user)
+        private ObservableCollection<MessageDisplay> _messagesCollection = new();
+
+        public SavedMessagesControl()
         {
             InitializeComponent();
-            _currentUser = user;
+            _serverService = App.ServerService;
+            _currentUserId = _serverService?.CurrentUserId ?? 0;
+            SavedMessagesList.ItemsSource = _messagesCollection;
 
-            // Знаходимо або створюємо чат "Збережені повідомлення"
-            EnsureSavedMessagesChatExists();
+            Loaded += async (s, e) => await InitializeSavedChatAsync();
 
-            // Завантажуємо повідомлення на екран
-            LoadMessages();
+            Unloaded += (s, e) => {
+                _messagesCollection.Clear();
+                _savedChatId = 0;
+            };
         }
 
-        private void EnsureSavedMessagesChatExists()
+        public SavedMessagesControl(ServerService? serverService, int currentUserId)
         {
-            using (var db = new AppDbContext())
-            {
-                // Шукаємо чат, де єдиний учасник (Members.Count == 1)
-                var savedChat = db.Chats
-                    .Include(c => c.Members)
-                    .FirstOrDefault(c => c.IsGroup == false &&
-                                         c.Members.Count == 1 &&
-                                         c.Members.Any(m => m.UserId == _currentUser.Id));
+            InitializeComponent();
+            _serverService = serverService;
+            _currentUserId = currentUserId;
+            SavedMessagesList.ItemsSource = _messagesCollection;
 
-                // Якщо такого чату ще немає — створюємо його
-                if (savedChat == null)
+            Loaded += async (s, e) => await InitializeSavedChatAsync();
+
+            Unloaded += (s, e) => {
+                _messagesCollection.Clear();
+                _savedChatId = 0;
+            };
+        }
+
+        private async Task InitializeSavedChatAsync()
+        {
+            if (_serverService == null || !_serverService.IsConnected)
+            {
+                MessageBox.Show("❌ Not connected to server");
+                return;
+            }
+
+            try
+            {
+                var (success, error, data) = await _serverService.CreateDirectChatAsync(_currentUserId);
+
+                if (success && data.HasValue && data.Value.TryGetProperty("chat_id", out var idElem))
                 {
-                    savedChat = new Chat { IsGroup = false };
-                    db.Chats.Add(savedChat);
-                    db.SaveChanges(); // Зберігаємо, щоб отримати Id чату
-
-                    // Додаємо себе як єдиного учасника
-                    var member = new ChatMember
-                    {
-                        ChatId = savedChat.Id,
-                        UserId = _currentUser.Id
-                    };
-                    db.ChatMembers.Add(member);
-                    db.SaveChanges();
+                    _savedChatId = idElem.GetInt32();
+                    Console.WriteLine($"✅ Opened Saved Messages chat (ID: {_savedChatId})");
+                    await LoadMessagesFromServerAsync();
                 }
-
-                // Запам'ятовуємо ID цього чату, щоб потім туди писати
-                _savedChatId = savedChat.Id;
+                else
+                {
+                    MessageBox.Show($"❌ Failed to open Saved Messages: {error}");
+                }
             }
-        }
-
-        private void LoadMessages()
-        {
-            using (var db = new AppDbContext())
+            catch (Exception ex)
             {
-                // Дістаємо всі повідомлення з цього чату
-                var messages = db.Messages
-                    .Where(m => m.ChatId == _savedChatId)
-                    .OrderBy(m => m.SentAt)
-                    .ToList();
-
-                SavedMessagesList.ItemsSource = messages;
+                Console.WriteLine($"❌ Error initializing Saved Messages: {ex.Message}");
             }
         }
 
-        private void SaveMessage_Click(object sender, RoutedEventArgs e)
+        private async Task LoadMessagesFromServerAsync()
         {
-            if (string.IsNullOrWhiteSpace(MessageInput.Text))
+            if (_savedChatId == 0 || _serverService == null)
                 return;
 
-            using (var db = new AppDbContext())
-            {
-                // Створюємо реальне повідомлення для БД
-                var newMessage = new Message
-                {
-                    ChatId = _savedChatId,
-                    SenderId = _currentUser.Id,
-                    Text = MessageInput.Text,
-                    SentAt = System.DateTime.UtcNow
-                };
+            var (success, error, data) = await _serverService.GetMessagesAsync(_savedChatId);
 
-                db.Messages.Add(newMessage);
-                db.SaveChanges(); // Відправляємо на somee.com!
+            if (success && data.HasValue && data.Value.TryGetProperty("messages", out var messagesElem))
+            {
+                _messagesCollection.Clear();
+                foreach (var msgElem in messagesElem.EnumerateArray())
+                {
+                    try
+                    {
+                        DateTime sentAt = DateTime.UtcNow;
+                        if (msgElem.TryGetProperty("sent_at", out var sentAtElem) &&
+                            sentAtElem.ValueKind == JsonValueKind.String)
+                        {
+                            if (DateTime.TryParse(sentAtElem.GetString(), out var parsed))
+                                sentAt = parsed;
+                        }
+
+                        var msgData = new MessageData
+                        {
+                            Text = msgElem.GetProperty("text").GetString() ?? "",
+                            SenderUsername = msgElem.GetProperty("sender_username").GetString() ?? "You",
+                            SenderId = msgElem.GetProperty("sender_id").GetInt32(),
+                            IsOwn = true,
+                            SentAt = sentAt
+                        };
+                        _messagesCollection.Add(new MessageDisplay { Message = msgData });
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error parsing saved message: {ex.Message}");
+                    }
+                }
+
+                if (_messagesCollection.Count > 0)
+                    SavedMessagesList.ScrollIntoView(_messagesCollection.Last());
             }
+        }
+
+        private async void SaveMessage_Click(object sender, RoutedEventArgs e)
+        {
+            string text = MessageInput.Text.Trim();
+            if (string.IsNullOrEmpty(text) || _serverService == null || _savedChatId == 0)
+                return;
 
             MessageInput.Clear();
-            LoadMessages();
+
+            var (success, error, _) = await _serverService.SendMessageAsync(_savedChatId, text);
+
+            if (success)
+            {
+                await Task.Delay(100);
+                await LoadMessagesFromServerAsync();
+            }
+            else
+            {
+                MessageBox.Show($"❌ Failed to save: {error}");
+                MessageInput.Text = text;
+            }
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
@@ -102,6 +148,8 @@ namespace Messenger_Project
             {
                 mainWindow.MainArea.Content = null;
                 mainWindow.ChatView.Visibility = Visibility.Visible;
+                _messagesCollection.Clear();
+                _savedChatId = 0;
             }
         }
     }

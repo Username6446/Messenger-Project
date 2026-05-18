@@ -1,9 +1,4 @@
-using System;
-
-namespace Messenger_Project.Models;
-
-public enum MessageStatus { Sent, Delivered, Read }
-
+namespace MessengerServer.Models;
 public class Message
 {
     public int Id { get; set; }
@@ -12,8 +7,13 @@ public class Message
     public string Text { get; set; } = string.Empty;
     public DateTime SentAt { get; set; } = DateTime.UtcNow;
     public MessageStatus Status { get; set; } = MessageStatus.Sent;
-    public string Type { get; set; } = "Text";
-
+    public string Type { get; set; } = "Text"; 
     public Chat Chat { get; set; } = null!;
     public User Sender { get; set; } = null!;
+}
+public enum MessageStatus
+{
+    Sent,
+    Delivered,
+    Read
 }

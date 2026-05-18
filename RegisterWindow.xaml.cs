@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Windows;
-using BCrypt.Net;
-using Messenger_Project.Data;
-using Messenger_Project.Models;
+using Messenger_Project.Services;
 
 namespace Messenger_Project
 {
@@ -14,7 +11,7 @@ namespace Messenger_Project
             InitializeComponent();
         }
 
-        private void RegisterButton_Click(object sender, RoutedEventArgs e)
+        private async void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
             HideError();
 
@@ -22,46 +19,57 @@ namespace Messenger_Project
             string password = PasswordBox.Password;
             string repeatPassword = RepeatPasswordBox.Password;
 
-            // проста валідація, коли перенесем це все в бд треба буде переробити
+            // базова валідація
             if (!ValidateInputs(username, password, repeatPassword))
                 return;
 
             try
             {
-                using (var db = new AppDbContext())
+                var serverService = App.ServerService;
+
+                // Проверяем подключение к серверу
+                if (serverService == null || !serverService.IsConnected)
                 {
-                    // Перевірка чи є таке ім'я у базі 
-                    bool userExists = db.Users.Any(u => u.Username.ToLower() == username.ToLower());
-
-                    if (userExists)
-                    {
-                        ShowError("This username is already busy. Choose another.");
-                        return;
-                    }
-
-                    // Хешування паролю
-                    string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
-
-                    //Створення нового користувача
-                    var newUser = new User
-                    {
-                        Username = username,
-                        PasswordHash = passwordHash,
-                        CreatedAt = DateTime.UtcNow
-                    };
-
-                    //Запис у базу
-                    db.Users.Add(newUser);
-                    db.SaveChanges();
-
-                    MainWindow mainWindow = new MainWindow(newUser);
-                    mainWindow.Show();
-                    this.Close();
+                    ShowError("❌ Not connected to server.\n\nMake sure server is running on localhost:5000");
+                    return;
                 }
+
+                // ==================== REGISTER ЧЕРЕЗ СЕРВЕР ====================
+                var (success, error, data) = await serverService.RegisterAsync(username, password);
+
+                if (!success)
+                {
+                    ShowError($"❌ {error ?? "Registration failed"}");
+                    return;
+                }
+
+                if (data == null || !data.HasValue)
+                {
+                    ShowError("❌ Invalid server response");
+                    return;
+                }
+
+                // Парсимо ответ от сервера
+                var element = data.Value;
+
+                if (!element.TryGetProperty("user_id", out var userIdElem) ||
+                    !userIdElem.TryGetInt32(out int userId))
+                {
+                    ShowError("❌ Invalid user data from server");
+                    return;
+                }
+
+                // Сохраняем ID пользователя
+                serverService.SetCurrentUserId(userId, username);
+
+                // Открываем главное окно
+                MainWindow mainWindow = new MainWindow(userId, username);
+                mainWindow.Show();
+                this.Close();
             }
             catch (Exception ex)
             {
-                ShowError($"Database connection failed: {ex.Message}");
+                ShowError($"{ex.Message}");
             }
         }
 
@@ -76,35 +84,35 @@ namespace Messenger_Project
 
             if (username.Length < 3)
             {
-                ShowError("The username must contain a minimum of 3 characters.");
+                ShowError("Username must be at least 3 characters");
                 UsernameBox.Focus();
                 return false;
             }
 
             if (string.IsNullOrEmpty(password))
             {
-                ShowError("Enter the password.");
+                ShowError("Enter a password");
                 PasswordBox.Focus();
                 return false;
             }
 
             if (password.Length < 6)
             {
-                ShowError("Password must be at least 6 characters long.");
+                ShowError("Password must be at least 6 characters");
                 PasswordBox.Focus();
                 return false;
             }
 
             if (string.IsNullOrEmpty(repeatPassword))
             {
-                ShowError("Repeat the password.");
+                ShowError("Repeat the password");
                 RepeatPasswordBox.Focus();
                 return false;
             }
 
             if (password != repeatPassword)
             {
-                ShowError("The passwords do not match.");
+                ShowError("Passwords do not match");
                 RepeatPasswordBox.Focus();
                 return false;
             }

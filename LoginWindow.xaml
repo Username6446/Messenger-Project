@@ -30,10 +30,5 @@
 
         <Button Content="Sign in" Click="Sign_In_Button_Click" Height="23" Width="140" RenderTransformOrigin="0.571,0.534"/>
 
-
-
-
-
-
     </StackPanel> 
 </Window>

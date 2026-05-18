@@ -1,9 +1,6 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
-using System.Collections.Generic;
-using BCrypt.Net;
-using Messenger_Project.Data;  
-using Messenger_Project.Models; 
+using Messenger_Project.Services;
+
 namespace Messenger_Project
 {
     public partial class LoginWindow : Window
@@ -12,6 +9,7 @@ namespace Messenger_Project
         {
             InitializeComponent();
         }
+
         private void ShowError(string message)
         {
             ErrorText.Text = message;
@@ -23,14 +21,14 @@ namespace Messenger_Project
             ErrorText.Visibility = Visibility.Collapsed;
             ErrorText.Text = string.Empty;
         }
-        private void Sign_In_Button_Click(object sender, RoutedEventArgs e)
+
+        private async void Sign_In_Button_Click(object sender, RoutedEventArgs e)
         {
             HideError();
 
             string username = UsernameBox.Text.Trim();
             string password = PasswordBox.Password;
 
-            // базова перевірка
             if (string.IsNullOrEmpty(username))
             {
                 ShowError("Enter a username");
@@ -45,66 +43,54 @@ namespace Messenger_Project
                 return;
             }
 
-            // перевірка на існуючий акаунт
-            //var user = UserDatabase.FindUser(username, password);
-            //if (user == null)
-            //{
-            //    ShowError("Invalid username or password");
-            //    return;
-            //}
-            //MainWindow mainWindow = new MainWindow(user);
-            //mainWindow.Show();
-            //this.Close();
-
             try
             {
-                using (var db = new AppDbContext())
+                var serverService = App.ServerService;
+
+                if (serverService == null || !serverService.IsConnected)
                 {
-                    // Тепер 'user' оголошується ТІЛЬКИ ТУТ
-                    var user = db.Users.FirstOrDefault(u => u.Username.ToLower() == username.ToLower());
-
-                    if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-                    {
-                        ShowError("Invalid username or password");
-                        return;
-                    }
-
-                    // Якщо все добре — переходимо в головне вікно
-                    MainWindow mainWindow = new MainWindow(user);
-                    mainWindow.Show();
-                    this.Close();
+                    ShowError($"❌ Not connected to server.\n\nMake sure server is running on {ServerService.ServerHost}:{ServerService.ServerPort}");
+                    return;
                 }
+
+                var (success, error, data) = await serverService.LoginAsync(username, password);
+
+                if (!success)
+                {
+                    ShowError($"❌ {error ?? "Login failed"}");
+                    return;
+                }
+
+                if (data == null || !data.HasValue)
+                {
+                    ShowError("❌ Invalid server response");
+                    return;
+                }
+
+                var element = data.Value;
+
+                if (!element.TryGetProperty("user_id", out var userIdElem) ||
+                    !userIdElem.TryGetInt32(out int userId))
+                {
+                    ShowError("❌ Invalid user data from server");
+                    return;
+                }
+
+                string? userUsername = null;
+                if (element.TryGetProperty("username", out var usernameElem))
+                {
+                    userUsername = usernameElem.GetString();
+                }
+
+                serverService.SetCurrentUserId(userId, userUsername ?? username);
+
+                MainWindow mainWindow = new MainWindow(userId, username);
+                mainWindow.Show();
+                this.Close();
             }
             catch (Exception ex)
             {
-                ShowError($"Database connection failed: {ex.Message}");
-            }
-        }
-
-        public static class UserDatabase
-        {
-            private static List<UserRecord> _users = new List<UserRecord>();
-
-            public static bool UserExists(string username)
-            {
-                return _users.Exists(u =>
-                    u.Username.Equals(username, System.StringComparison.OrdinalIgnoreCase));
-            }
-
-            public static void AddUser(string username, string password)
-            {
-                _users.Add(new UserRecord
-                {
-                    Username = username,
-                    Password = password
-                });
-            }
-
-            public static UserRecord? FindUser(string username, string password)
-            {
-                return _users.Find(u =>
-                    u.Username.Equals(username, System.StringComparison.OrdinalIgnoreCase) &&
-                    u.Password == password);
+                ShowError($"❌ Error: {ex.Message}");
             }
         }
     }
